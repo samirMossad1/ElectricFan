@@ -135,9 +135,9 @@ bool	GPIO_pinInit(const GPIO_pinConfigStruct* ConfigStructptr)
 
 
 
-uint8_t GPIO_readPort(const GPIO_PORT PORT)
+uint8_t GPIO_readPort(const GPIO_portConfigStruct* PORT_structPtr)
 {
-	switch(PORT)
+	switch(PORT_structPtr->PORT)
 	{
 	case PORT_A: return GPIO_PORTA_INPUT_REGISTER;
 	case PORT_B: return GPIO_PORTB_INPUT_REGISTER;
@@ -163,7 +163,7 @@ uint8_t	GPIO_readPin(const GPIO_pinConfigStruct* GPIO_structPtr)
 
 
 
-void	GPIO_writePort(const GPIO_PORT PORT, const GPIO_LEVEL data)
+void	GPIO_writePort(const GPIO_portConfigStruct* PORT_structPtr, const GPIO_LEVEL data)
 {
 	uint8_t data_mapped=0x00;
 
@@ -172,7 +172,7 @@ void	GPIO_writePort(const GPIO_PORT PORT, const GPIO_LEVEL data)
 		data_mapped=0xFF;
 	}
 
-	switch(PORT)
+	switch(PORT_structPtr->PORT)
 	{
 	case PORT_A: GPIO_PORTA_OUTPUT_REGISTER=data_mapped;
 	break;
@@ -186,19 +186,19 @@ void	GPIO_writePort(const GPIO_PORT PORT, const GPIO_LEVEL data)
 }
 
 
-void GPIO_writePin(const GPIO_PORT PORT, const GPIO_PIN PIN,const GPIO_LEVEL data)
+void GPIO_writePin(const GPIO_pinConfigStruct* PIN_structPtr,const GPIO_LEVEL data)
 {
-	switch(PORT)
+	switch(PIN_structPtr->PORT)
 	{
 	case PORT_A:
 
 		if(data == _LOW)
 		{
-			RESET_BIT(GPIO_PORTA_OUTPUT_REGISTER,PIN);
+			RESET_BIT(GPIO_PORTA_OUTPUT_REGISTER, PIN_structPtr->PIN);
 		}
 		else
 		{
-			SET_BIT(GPIO_PORTA_OUTPUT_REGISTER,PIN);
+			SET_BIT(GPIO_PORTA_OUTPUT_REGISTER,PIN_structPtr->PIN);
 		}
 		break;
 
@@ -206,11 +206,11 @@ void GPIO_writePin(const GPIO_PORT PORT, const GPIO_PIN PIN,const GPIO_LEVEL dat
 	case PORT_B:
 		if(data == _LOW)
 		{
-			RESET_BIT(GPIO_PORTB_OUTPUT_REGISTER,PIN);
+			RESET_BIT(GPIO_PORTB_OUTPUT_REGISTER,PIN_structPtr->PIN);
 		}
 		else
 		{
-			SET_BIT(GPIO_PORTB_OUTPUT_REGISTER,PIN);
+			SET_BIT(GPIO_PORTB_OUTPUT_REGISTER,PIN_structPtr->PIN);
 		}
 		break;
 
@@ -218,11 +218,11 @@ void GPIO_writePin(const GPIO_PORT PORT, const GPIO_PIN PIN,const GPIO_LEVEL dat
 	case PORT_C:
 		if(data == _LOW)
 		{
-			RESET_BIT(GPIO_PORTC_OUTPUT_REGISTER,PIN);
+			RESET_BIT(GPIO_PORTC_OUTPUT_REGISTER,PIN_structPtr->PIN);
 		}
 		else
 		{
-			SET_BIT(GPIO_PORTC_OUTPUT_REGISTER,PIN);
+			SET_BIT(GPIO_PORTC_OUTPUT_REGISTER,PIN_structPtr->PIN);
 		}
 		break;
 
@@ -230,34 +230,57 @@ void GPIO_writePin(const GPIO_PORT PORT, const GPIO_PIN PIN,const GPIO_LEVEL dat
 	case PORT_D:
 		if(data == _LOW)
 		{
-			RESET_BIT(GPIO_PORTD_OUTPUT_REGISTER,PIN);
+			RESET_BIT(GPIO_PORTD_OUTPUT_REGISTER,PIN_structPtr->PIN);
 		}
 		else
 		{
-			SET_BIT(GPIO_PORTD_OUTPUT_REGISTER,PIN);
+			SET_BIT(GPIO_PORTD_OUTPUT_REGISTER,PIN_structPtr->PIN);
 		}
 		break;
 	}
 }
 
-void GPIO_togglePin(const GPIO_PORT PORT , const GPIO_PIN PIN)
+void GPIO_togglePin(const GPIO_pinConfigStruct* PIN_structPtr)
 {
 
-	switch(PORT)
+	switch(PIN_structPtr->PORT)
 	{
 	case  PORT_A :
-		TOGGLE_BIT(GPIO_PORTA_OUTPUT_REGISTER,PIN);
+		TOGGLE_BIT(GPIO_PORTA_OUTPUT_REGISTER,PIN_structPtr->PIN);
 		break;
 	case  PORT_B :
-		TOGGLE_BIT(GPIO_PORTB_OUTPUT_REGISTER,PIN);
+		TOGGLE_BIT(GPIO_PORTB_OUTPUT_REGISTER,PIN_structPtr->PIN);
 		break;
 	case  PORT_C :
-		TOGGLE_BIT(GPIO_PORTC_OUTPUT_REGISTER,PIN);
+		TOGGLE_BIT(GPIO_PORTC_OUTPUT_REGISTER,PIN_structPtr->PIN);
 		break;
 	case  PORT_D :
-		TOGGLE_BIT(GPIO_PORTD_OUTPUT_REGISTER,PIN);
+		TOGGLE_BIT(GPIO_PORTD_OUTPUT_REGISTER,PIN_structPtr->PIN);
 		break;
 	}
+}
+
+
+void	GPIO_togglePort(const GPIO_portConfigStruct* PORT_structPtr)
+{
+
+
+	switch(PORT_structPtr->PORT)
+		{
+		case  PORT_A :
+			GPIO_PORTA_OUTPUT_REGISTER^= GPIO_TOGGLE_PORT_MASK;
+			break;
+		case  PORT_B :
+			GPIO_PORTB_OUTPUT_REGISTER^= GPIO_TOGGLE_PORT_MASK;
+			break;
+		case  PORT_C :
+			GPIO_PORTC_OUTPUT_REGISTER^= GPIO_TOGGLE_PORT_MASK;
+			break;
+		case  PORT_D :
+			GPIO_PORTD_OUTPUT_REGISTER^= GPIO_TOGGLE_PORT_MASK;
+			break;
+		}
+
 }
 
 void GPIO_pinPullUpInit(const GPIO_pinConfigStruct* GPIO_PIN)
@@ -282,10 +305,10 @@ void GPIO_pinPullUpInit(const GPIO_pinConfigStruct* GPIO_PIN)
 }
 
 
-void GPIO_portPullUpInit(const GPIO_PORT PORT)
+void GPIO_portPullUpInit(const GPIO_portConfigStruct* PORT_structPtr)
 {
 
-	switch(PORT)
+	switch(PORT_structPtr->PORT)
 	{
 	case  PORT_A :
 		GPIO_PORTA_OUTPUT_REGISTER=0xFF;

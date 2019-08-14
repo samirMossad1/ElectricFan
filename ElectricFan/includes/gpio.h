@@ -113,7 +113,7 @@ bool   GPIO_portInit(const GPIO_portConfigStruct*);
  *Returns: the value of the data register
  *
  *--------------------------------------------------------------*/
-uint8_t GPIO_readPort(const GPIO_PORT);
+uint8_t GPIO_readPort(const GPIO_portConfigStruct*);
 
 
 /* ------------------------------------------------------------
@@ -126,7 +126,7 @@ uint8_t GPIO_readPort(const GPIO_PORT);
  *Returns: void
  *
  *--------------------------------------------------------------*/
-void	GPIO_writePort(const GPIO_PORT, const uint8_t);
+void	GPIO_writePort(const GPIO_portConfigStruct*, const uint8_t);
 
 
 /* ------------------------------------------------------------
@@ -139,7 +139,7 @@ void	GPIO_writePort(const GPIO_PORT, const uint8_t);
  *Returns: void
  *
  *--------------------------------------------------------------*/
-void	GPIO_togglePort(const GPIO_PORT);
+void	GPIO_togglePort(const GPIO_portConfigStruct*);
 
 
 
@@ -154,7 +154,7 @@ void	GPIO_togglePort(const GPIO_PORT);
  *Returns: void
  *
  *--------------------------------------------------------------*/
-void GPIO_portPullUpInit(const GPIO_PORT);
+void GPIO_portPullUpInit(const GPIO_portConfigStruct*);
 
 /* ------------------------------------------------------------
  *Function-Name:GPIO_pinInit
@@ -194,7 +194,7 @@ uint8_t	GPIO_readPin(const GPIO_pinConfigStruct*);
  *Returns:	void
  *
  *--------------------------------------------------------------*/
-void GPIO_writePin(const GPIO_PORT , const GPIO_PIN ,const uint8_t);
+void GPIO_writePin(const GPIO_pinConfigStruct*,const uint8_t);
 
 
 /* ------------------------------------------------------------
@@ -207,7 +207,7 @@ void GPIO_writePin(const GPIO_PORT , const GPIO_PIN ,const uint8_t);
  *Returns:	void
  *
  *--------------------------------------------------------------*/
-void GPIO_togglePin(const GPIO_PORT , const GPIO_PIN);
+void GPIO_togglePin(const GPIO_pinConfigStruct*);
 
 
 /* ------------------------------------------------------------

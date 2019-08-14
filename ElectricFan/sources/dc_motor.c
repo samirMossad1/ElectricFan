@@ -12,60 +12,62 @@ static bool timer2_pwmMode_init(void);
 static bool timer1_pwmMode_init(const TIMER_CHANNEL);
 
 
+static GPIO_pinConfigStruct input_g;
+
 
 bool DCMOTOR_init(const DCMOTOR_Structure *DCMOTOR_structPtr)
 {
 
 	if(DCMOTOR_structPtr == NULL_PTR)	return FALSE;
 
-	GPIO_pinConfigStruct input_1={DCMOTOR_structPtr->PORT_INPUT_1
-			,DCMOTOR_structPtr->PIN_INPUT_1
-			,_OUTPUT};
 
-	GPIO_pinConfigStruct input_2={DCMOTOR_structPtr->PORT_INPUT_2
-			,DCMOTOR_structPtr->PIN_INPUT_2
-			,_OUTPUT};
+	input_g.PORT=DCMOTOR_structPtr->PORT_INPUT_1;
+	input_g.PIN=DCMOTOR_structPtr->PIN_INPUT_1;
+	input_g.PIN_TYPE=_OUTPUT;
 
-	GPIO_pinConfigStruct enable;
+	GPIO_pinInit(&input_g);
+	GPIO_writePin(&input_g,LOW);
+
+	input_g.PORT=DCMOTOR_structPtr->PORT_INPUT_2;
+	input_g.PIN=DCMOTOR_structPtr->PIN_INPUT_2;
+	input_g.PIN_TYPE=_OUTPUT;
+
+	GPIO_pinInit(&input_g);
+	GPIO_writePin(&input_g,LOW);
+
 
 	switch(DCMOTOR_structPtr->SPEED_PIN)
 	{
 
-	case SPEED_OC_0:    enable.PORT=PORT_B;
-	enable.PIN=PIN_3;
-	enable.PIN_TYPE=_OUTPUT;
+	case SPEED_OC_0:    input_g.PORT=PORT_B;
+	input_g.PIN=PIN_3;
+	input_g.PIN_TYPE=_OUTPUT;
 	timer0_pwmMode_init();
 	break;
 
 
-	case SPEED_OC_1_A:  enable.PORT=PORT_D;
-	enable.PIN=PIN_5;
-	enable.PIN_TYPE=_OUTPUT;
+	case SPEED_OC_1_A:  input_g.PORT=PORT_D;
+	input_g.PIN=PIN_5;
+	input_g.PIN_TYPE=_OUTPUT;
 	timer1_pwmMode_init(_CHANNEL_A);
 	break;
 
-	case SPEED_OC_1_B:  enable.PORT=PORT_D;
-	enable.PIN=PIN_4;
-	enable.PIN_TYPE=_OUTPUT;
+	case SPEED_OC_1_B:  input_g.PORT=PORT_D;
+	input_g.PIN=PIN_4;
+	input_g.PIN_TYPE=_OUTPUT;
 	timer1_pwmMode_init(_CHANNEL_B);
 	break;
 
 
-	case SPEED_OC_2:	enable.PORT=PORT_D;
-	enable.PIN=PIN_7;
-	enable.PIN_TYPE=_OUTPUT;
+	case SPEED_OC_2:	input_g.PORT=PORT_D;
+	input_g.PIN=PIN_7;
+	input_g.PIN_TYPE=_OUTPUT;
 	timer2_pwmMode_init();
 	break;
 
 	}
 
-	GPIO_pinInit(&input_1);
-	GPIO_pinInit(&input_2) ;
-	GPIO_pinInit(&enable) ;
-
-	GPIO_writePin(DCMOTOR_structPtr->PORT_INPUT_1,DCMOTOR_structPtr->PIN_INPUT_1,LOW);
-	GPIO_writePin(DCMOTOR_structPtr->PORT_INPUT_2,DCMOTOR_structPtr->PIN_INPUT_2,LOW);
-
+	GPIO_pinInit(&input_g) ;
 
 
 	return TRUE;
@@ -77,8 +79,17 @@ void DCMOTOR_moveClockWise(const DCMOTOR_Structure * DCMOTOR_structPtr)
 
 	if(DCMOTOR_structPtr == NULL_PTR)	return;
 
-	GPIO_writePin(DCMOTOR_structPtr->PORT_INPUT_2,DCMOTOR_structPtr->PIN_INPUT_2,LOW);
-	GPIO_writePin(DCMOTOR_structPtr->PORT_INPUT_1,DCMOTOR_structPtr->PIN_INPUT_1,HIGH);
+	input_g.PORT=DCMOTOR_structPtr->PORT_INPUT_1;
+	input_g.PIN=DCMOTOR_structPtr->PIN_INPUT_1;
+	input_g.PIN_TYPE=_OUTPUT;
+
+	GPIO_writePin(&input_g,HIGH);
+
+	input_g.PORT=DCMOTOR_structPtr->PORT_INPUT_2;
+	input_g.PIN=DCMOTOR_structPtr->PIN_INPUT_2;
+	input_g.PIN_TYPE=_OUTPUT;
+
+	GPIO_writePin(&input_g,LOW);
 
 }
 void DCMOTOR_moveAntiClockWise(const DCMOTOR_Structure *DCMOTOR_structPtr)
@@ -86,8 +97,17 @@ void DCMOTOR_moveAntiClockWise(const DCMOTOR_Structure *DCMOTOR_structPtr)
 
 	if(DCMOTOR_structPtr == NULL_PTR)	return;
 
-	GPIO_writePin(DCMOTOR_structPtr->PORT_INPUT_1,DCMOTOR_structPtr->PIN_INPUT_1,LOW);
-	GPIO_writePin(DCMOTOR_structPtr->PORT_INPUT_2,DCMOTOR_structPtr->PIN_INPUT_2,HIGH);
+	input_g.PORT=DCMOTOR_structPtr->PORT_INPUT_1;
+	input_g.PIN=DCMOTOR_structPtr->PIN_INPUT_1;
+	input_g.PIN_TYPE=_OUTPUT;
+
+	GPIO_writePin(&input_g,LOW);
+
+	input_g.PORT=DCMOTOR_structPtr->PORT_INPUT_2;
+	input_g.PIN=DCMOTOR_structPtr->PIN_INPUT_2;
+	input_g.PIN_TYPE=_OUTPUT;
+
+	GPIO_writePin(&input_g,HIGH);
 
 
 }
@@ -96,8 +116,17 @@ void DCMOTOR_stop(const DCMOTOR_Structure *DCMOTOR_structPtr)
 
 	if(DCMOTOR_structPtr == NULL_PTR)	return;
 
-	GPIO_writePin(DCMOTOR_structPtr->PORT_INPUT_1,DCMOTOR_structPtr->PIN_INPUT_1,LOW);
-	GPIO_writePin(DCMOTOR_structPtr->PORT_INPUT_2,DCMOTOR_structPtr->PIN_INPUT_2,LOW);
+	input_g.PORT=DCMOTOR_structPtr->PORT_INPUT_1;
+	input_g.PIN=DCMOTOR_structPtr->PIN_INPUT_1;
+	input_g.PIN_TYPE=_OUTPUT;
+
+	GPIO_writePin(&input_g,LOW);
+
+	input_g.PORT=DCMOTOR_structPtr->PORT_INPUT_2;
+	input_g.PIN=DCMOTOR_structPtr->PIN_INPUT_2;
+	input_g.PIN_TYPE=_OUTPUT;
+
+	GPIO_writePin(&input_g,LOW);
 
 }
 
